@@ -1,4 +1,4 @@
-name: k3d tests
+name: k3d
 
 on:
   push:
@@ -26,10 +26,10 @@ jobs:
           curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.4.1 bash
       - name: "create registery"
         run: |
-          k3d registry create k3d-test-registery --port 0.0.0.0:7777 -i public.ecr.aws/docker/library/registry:latest
+          k3d registry create k3d-registery --port 0.0.0.0:7777 -i public.ecr.aws/docker/library/registry:latest
       - name: "install cluster"
         run: |
-          k3d cluster create test-cluster && k3d registry list && k3d cluster list
+          k3d cluster create k3d-cluster && k3d registry list && k3d cluster list
       - name: "list pods"
         run: |
           kubectl get pods -A
