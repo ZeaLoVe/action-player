@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'k8s/**'
+      - '.github/workflows/k3d.yml'
   pull_request:
     branches: [ master ]
     paths:
       - 'k8s/**'
+      - '.github/workflows/k3d.yml'
 
 jobs:
   build:
