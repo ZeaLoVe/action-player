@@ -1,0 +1,35 @@
+name: k3d tests
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'k8s/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'k8s/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: stefanprodan/kube-tools@v1
+        with:
+          helm: 3.8.1
+          
+      - run: helm version
+
+      - name: "install k3d"
+        run: |
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.4.1 bash
+      - name: "create registery"
+        run: |
+          k3d registry create k3d-test-registery --port 0.0.0.0:7777 -i public.ecr.aws/docker/library/registry:latest
+      - name: "install cluster"
+        run: |
+          k3d cluster create test-cluster && k3d registry list && k3d cluster list
+      - name: "list pods"
+        run: |
+          kubectl get pods -A

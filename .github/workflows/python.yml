@@ -1,0 +1,26 @@
+name: python
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'python/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: System information
+        shell: bash
+        run: |
+          df -h && lscpu && free -g
+
+      - name: Install python dependences
+        shell: bash
+        run: |
+          pip3 install --user six PyHamcrest requests environs fire
+  
+      - name: Python version
+        shell: bash
+        run: |
+          python3 --version
