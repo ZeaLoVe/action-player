@@ -1,0 +1,35 @@
+name: Setup k3d
+description: " "
+inputs:
+  helm_version:
+    description: "helm version"
+    default: 3.8.1
+    required: true
+  k3d_version:
+    description: "k3d version"
+    default: 5.4.1
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - uses: stefanprodan/kube-tools@v1
+      with:
+        helm: ${{ inputs.helm_version }}
+
+    - uses: rinx/setup-k3d@v0.0.2
+      with:
+        version: ${{ inputs.k3d_version }} 
+    
+    - name: Get cluster info
+      shell: bash
+      run: |
+        kubectl cluster-info
+        kubectl get pods -n kube-system
+        kubectl get nodes
+        echo "current-context:" $(kubectl config current-context)  
+
+    - name: Helm version info
+      shell: bash
+      run: |
+        helm version
