@@ -37,4 +37,4 @@ jobs:
 
       - name: Run python scripts
         run: |
-          python3 demo.py
+          python3 ./python/demo.py
