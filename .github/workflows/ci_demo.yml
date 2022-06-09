@@ -1,0 +1,34 @@
+name: ci demo
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/ci_demo.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/ci_demo.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup
+        shell: bash
+        run: |
+          make setup
+
+      - name: build
+        shell: bash
+        run: |
+          make build
+
+      - name: run
+        shell: bash
+        run: |
+          make run
