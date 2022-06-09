@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: show info
+        shell: bash
+        run: |
+          pwd && ls -al && df -h
+
       - name: setup
         shell: bash
         run: |
