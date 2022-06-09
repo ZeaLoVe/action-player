@@ -21,6 +21,8 @@ jobs:
         run: |
           df -h && lscpu && free -g
 
+      - uses: ./.github/actions/setup_python
+
       - name: Install python dependences
         shell: bash
         run: |
