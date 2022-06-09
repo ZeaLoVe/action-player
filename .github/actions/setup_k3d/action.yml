@@ -1,5 +1,5 @@
 name: Setup k3d
-description: " "
+description: "Setup k3d and helm, registery TODO"
 inputs:
   helm_version:
     description: "helm version"
