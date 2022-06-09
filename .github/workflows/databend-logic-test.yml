@@ -30,6 +30,7 @@ jobs:
 
       - name: Wait for databend ready
         run: |
+          sleep 10
           kubectl wait -n databend pod --for=condition=Ready --all --timeout=300s
 
       - name: Show all pods
@@ -43,6 +44,10 @@ jobs:
           nohup kubectl port-forward -n databend svc/databend-query 8001:8000 2>&1 &
           nohup kubectl port-forward -n databend svc/databend-query 9000:9000 2>&1 &
 
+      # docker runtime
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Run logic test by docker image
         run: |
-           docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/k3y0u5f2/sqllogic/test:latest
+          docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/k3y0u5f2/sqllogic/test:latest
