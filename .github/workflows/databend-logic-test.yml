@@ -1,0 +1,48 @@
+name: databend logic test install by helm run on k3d
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/databend-logic-test.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/databend-logic-test.yml'
+
+jobs:
+  run-logic-test:
+    name: Run logic test 
+    runs-on: ubuntu-latest
+    env:
+      TAGS: v0.7.77-nightly-debian
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup_k3d
+
+      - name: Install databend-query and databend-meta by helm
+        run: |
+          helm repo add databend https://charts.databend.rs
+          helm repo update
+          helm upgrade --install databend-meta databend/databend-meta --namespace databend --create-namespace --set image.tag=${{ env.TAGS }}
+          helm upgrade --install databend-query databend/databend-query --namespace databend --create-namespace --set image.tag=${{ env.TAGS }}
+
+      - name: Wait for databend ready
+        run: |
+          kubectl wait -n databend pod --for=condition=Ready --all --timeout=300s
+
+      - name: Show all pods
+        shell: bash
+        run: |
+          kubectl get pods -A
+
+      - name: Export port locally
+        run: |
+          nohup kubectl port-forward -n databend svc/databend-query 3307:3307 2>&1 &
+          nohup kubectl port-forward -n databend svc/databend-query 8001:8000 2>&1 &
+          nohup kubectl port-forward -n databend svc/databend-query 9000:9000 2>&1 &
+
+      - name: Run logic test by docker image
+        run: |
+           docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/k3y0u5f2/sqllogic/test:latest

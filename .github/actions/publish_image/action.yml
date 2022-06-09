@@ -1,4 +1,5 @@
 # ref https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
+# TODO, this is a draft not finished
 name: Publish Docker image
 description: "Check will do all essential checks"
 inputs:
