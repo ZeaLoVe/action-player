@@ -9,4 +9,4 @@ build:
 	bash ${SCRIPTS_DIR}/build.sh
 
 run:
-	bash .${SCRIPTS_DIR}/run.sh
+	bash ${SCRIPTS_DIR}/run.sh
