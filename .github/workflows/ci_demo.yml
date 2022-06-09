@@ -14,26 +14,34 @@ on:
 
 jobs:
   build:
+    name: Run demo ci 
+    # if: github.repository == 'ZeaLoVe/action-player'
     runs-on: ubuntu-latest
+    env:
+      DEMO_ENV: demo
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
 
       - name: show info
-        shell: bash
         run: |
-          pwd && ls -al && df -h
+          pwd && ls -al && df -h && echo "${{ env.DEMO_ENV }}"
 
       - name: setup
-        shell: bash
         run: |
           make setup
 
       - name: build
-        shell: bash
         run: |
           make build
-
+        
       - name: run
-        shell: bash
         run: |
           make run
+
+      - if: ${{ failure() }}
+        run: |
+          echo "failed"
