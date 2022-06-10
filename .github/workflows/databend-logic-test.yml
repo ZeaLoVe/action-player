@@ -42,6 +42,10 @@ jobs:
           sleep 10
           kubectl wait -n databend pod --for=condition=Ready --all --timeout=300s
 
+      - if: ${{ failure() }}
+        run: |
+          kubectl describe pod `kubectl get pods -n databend |awk '{print $1}'` -n databend
+
       - name: Show all pods
         shell: bash
         run: |
