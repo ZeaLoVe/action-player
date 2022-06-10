@@ -28,6 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # usage: steps.databend_version.ouputs.VERSION
+      # - name: Get Databend version
+      #   id: databend_version
+      #   run: |
+      #     LASTEST_TAG=$(curl -s GET https://api.github.com/repos/datafuselabs/databend/tags\?per_page\=1 | jq -r '.[].name')
+      #     echo ::set-output name=VERSION::${LASTEST_TAG}
+
       - uses: ./.github/actions/setup_k3d
 
       - name: Install databend-query and databend-meta by helm
