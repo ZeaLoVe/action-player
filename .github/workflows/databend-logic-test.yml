@@ -6,7 +6,7 @@ on:
       image_tags:
         description: "tags of databend image"
         required: true
-        default: latest
+        default: v0.7.79-nightly
       logic_test_images:
         description: "logic test image full name and tags"  
         required: true
