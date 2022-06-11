@@ -6,11 +6,11 @@ on:
       image_tags:
         description: "tags of databend image"
         required: true
-        default: latest
+        default: v0.7.80-nightly
       logic_test_images:
         description: "logic test image full name and tags"  
         required: true
-        default: public.ecr.aws/k3y0u5f2/sqllogic/test:latest
+        default: public.ecr.aws/i7g1w5q7/sqllogictest:latest
 # on:
 #   push:
 #     branches: [ main ]
