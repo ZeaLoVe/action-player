@@ -1,11 +1,13 @@
 name: databend logic test install by helm run on k3d
 
 on: 
+  schedule:
+    - cron: '0 23 * * *'
   workflow_dispatch:
     inputs:
       image_tags:
         description: "tags of databend image"
-        required: true
+        required: false
         default: v0.7.80-nightly
       logic_test_images:
         description: "logic test image full name and tags"  
@@ -29,20 +31,27 @@ jobs:
       - uses: actions/checkout@v2
 
       # usage: steps.databend_version.ouputs.VERSION
-      # - name: Get Databend version
-      #   id: databend_version
-      #   run: |
-      #     LASTEST_TAG=$(curl -s GET https://api.github.com/repos/datafuselabs/databend/tags\?per_page\=1 | jq -r '.[].name')
-      #     echo ::set-output name=VERSION::${LASTEST_TAG}
+      - name: Get Databend version
+        id: databend_version
+        run: |
+          LASTEST_TAG=$(curl -s GET https://api.github.com/repos/datafuselabs/databend/tags\?per_page\=1 | jq -r '.[].name')
+          echo ::set-output name=VERSION::${LASTEST_TAG}
+
+      - name: Show databend release version
+        run: |
+          echo "${{ steps.databend_version.outputs.VERSION }}"
 
       - uses: ./.github/actions/setup_k3d
 
+      # TODO if version is not set ,use latest
+      # from inputs: ${{ github.event.inputs.image_tags }}
+      # from latest: {{ steps.databend_version.outputs.VERSION }}
       - name: Install databend-query and databend-meta by helm
         run: |
           helm repo add databend https://charts.databend.rs
           helm repo update
-          helm upgrade --install databend-meta databend/databend-meta --namespace databend --create-namespace --set image.tag=${{ github.event.inputs.image_tags }}
-          helm upgrade --install databend-query databend/databend-query --namespace databend --create-namespace --set image.tag=${{ github.event.inputs.image_tags }}
+          helm upgrade --install databend-meta databend/databend-meta --namespace databend --create-namespace --set image.tag=${{ steps.databend_version.outputs.VERSION }}
+          helm upgrade --install databend-query databend/databend-query --namespace databend --create-namespace --set image.tag=${{ steps.databend_version.outputs.VERSION }}
 
       - name: Wait for databend ready
         run: |
