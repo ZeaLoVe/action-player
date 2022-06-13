@@ -9,10 +9,6 @@ on:
         description: "tags of databend image"
         required: false
         default: v0.7.80-nightly
-      logic_test_images:
-        description: "logic test image full name and tags"  
-        required: true
-        default: public.ecr.aws/i7g1w5q7/sqllogictest:latest
 # on:
 #   push:
 #     branches: [ main ]
@@ -84,4 +80,4 @@ jobs:
       - if: ${{ failure() }}
         name: Run logic test given version
         run: |
-          docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles ${{github.event.inputs.logic_test_images}}
+          docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/i7g1w5q7/sqllogictest:${{github.event.inputs.image_tags}}
