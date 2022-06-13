@@ -80,3 +80,8 @@ jobs:
       - name: Run logic test by docker image
         run: |
           docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles ${{github.event.inputs.logic_test_images}}
+
+      - if: ${{ failure() }}
+        name: Run logic test latest (use by schedule job)
+        run: |
+          docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/i7g1w5q7/sqllogictest:latest
