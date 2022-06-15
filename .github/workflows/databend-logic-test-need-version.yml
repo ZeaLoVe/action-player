@@ -1,0 +1,55 @@
+name: databend logic test install by helm run on k3d (given version)
+
+on: 
+  workflow_dispatch:
+    inputs:
+      image_tags:
+        description: "tags of databend image"
+        required: false
+        default: v0.7.86-nightly
+
+jobs:
+  run-logic-test:
+    name: Run logic test 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup_k3d
+
+      # TODO if version is not set ,use latest
+      # from inputs: ${{ github.event.inputs.image_tags }}
+      # from latest: {{ steps.databend_version.outputs.VERSION }}
+      - name: Install databend-query and databend-meta by helm
+        run: |
+          helm repo add databend https://charts.databend.rs
+          helm repo update
+          helm upgrade --install databend-meta databend/databend-meta --namespace databend --create-namespace --set image.tag=${{ github.event.inputs.image_tags }}
+          helm upgrade --install databend-query databend/databend-query --namespace databend --create-namespace --set image.tag=${{ github.event.inputs.image_tags }}
+
+      - name: Wait for databend ready
+        run: |
+          sleep 10
+          kubectl wait -n databend pod --for=condition=Ready --all --timeout=300s
+
+      - if: ${{ failure() }}
+        run: |
+          kubectl describe pod `kubectl get pods -n databend |awk '{print $1}'` -n databend
+
+      - name: Show all pods
+        shell: bash
+        run: |
+          kubectl get pods -A
+
+      - name: Export port locally
+        run: |
+          nohup kubectl port-forward -n databend svc/databend-query 3307:3307 2>&1 &
+          nohup kubectl port-forward -n databend svc/databend-query 8001:8000 2>&1 &
+          nohup kubectl port-forward -n databend svc/databend-query 9000:9000 2>&1 &
+
+      # docker runtime
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Run logic test given version
+        run: |
+          docker run --rm --name test --network host --env SKIP_TEST_FILES=06_0007_show_roles public.ecr.aws/i7g1w5q7/sqllogictest:${{github.event.inputs.image_tags}}
