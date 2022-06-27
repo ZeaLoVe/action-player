@@ -1,0 +1,36 @@
+name: setup vm connect to teleport server
+
+on: 
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: "VM running time(second)"
+        required: true
+        default: "30"
+      teleport-token:
+        description: "teleport server token"
+        required: true
+        default: "82df00727a513d17afa0e5d843e6fa76"
+      teleport-server:
+        description: "teleport server address"
+        required: true
+        default: "teleport.zealove.tech:443"
+
+jobs:
+  vm-up:
+    name: Start a ubuntu vm 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+         curl -O https://get.gravitational.com/teleport-v9.3.7-linux-amd64-bin.tar.gz
+         tar -xzf teleport-v9.3.7-linux-amd64-bin.tar.gz
+         cd teleport
+         sudo ./install
+
+      - run: |
+         teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
+
+      - run: |
+         sleep ${{ github.event.inputs.duration }}m
