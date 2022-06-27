@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       duration:
-        description: "VM running time(second)"
+        description: "VM running time(minute)"
         required: true
         default: "30"
       teleport-token:
@@ -20,6 +20,7 @@ jobs:
   vm-up:
     name: Start a ubuntu vm 
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
 
@@ -30,7 +31,7 @@ jobs:
          sudo ./install
 
       - run: |
-         teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
+         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
 
       - run: |
          sleep ${{ github.event.inputs.duration }}m
