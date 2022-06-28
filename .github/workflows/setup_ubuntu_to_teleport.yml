@@ -3,10 +3,6 @@ name: setup vm connect to teleport server
 on: 
   workflow_dispatch:
     inputs:
-      duration:
-        description: "VM running time(minute)"
-        required: true
-        default: "30"
       teleport-token:
         description: "teleport server token"
         required: true
@@ -15,6 +11,10 @@ on:
         description: "teleport server address"
         required: true
         default: "teleport.zealove.tech:443"
+      user:
+        description: "system admin user"
+        required: true
+        default: "ZeaLoVe"
 
 jobs:
   vm-up:
@@ -30,8 +30,8 @@ jobs:
          cd teleport
          sudo ./install
 
-      - run: |
-         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
+      # TODO need a script create user with sudoer
+      # - run: |
 
       - run: |
-         sleep ${{ github.event.inputs.duration }}m
+         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
