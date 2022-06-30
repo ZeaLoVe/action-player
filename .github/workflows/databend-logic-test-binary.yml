@@ -32,7 +32,7 @@ jobs:
         run: |
           curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ steps.databend_version.outputs.VERSION }}/databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-musl.tar.gz
           tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-musl.tar.gz
-          cd databend && ./scripts/start.sh
+          ./scripts/start.sh
 
       # docker runtime
       - name: Set up Docker Buildx
