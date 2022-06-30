@@ -1,4 +1,4 @@
-name: databend logic test install by helm run on k3d
+name: databend logic test install by binary
 
 on: 
   schedule:
