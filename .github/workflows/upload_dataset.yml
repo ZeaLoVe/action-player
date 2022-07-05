@@ -1,0 +1,31 @@
+name: ci demo
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'benchmark/**'
+      - '.github/workflows/upload_dataset.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'benchmark/**'
+      - '.github/workflows/upload_dataset.yml'
+
+jobs:
+  build:
+    name: Get benchmark dataset 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: |
+          wget --continue 'https://datasets.clickhouse.com/hits_compatible/hits.csv.gz'
+          gzip -d hits.csv.gz
+          head -n 10000 hits.tsv > hits90m.tsv
+
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'hits90m.tsv'
