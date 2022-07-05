@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: |
-          wget --continue 'https://datasets.clickhouse.com/hits_compatible/hits.csv.gz'
+          wget --continue 'https://datasets.clickhouse.com/hits_compatible/hits.csv.gz' > /dev/null 2>&1
           gzip -d hits.csv.gz
           head -n 10000 hits.tsv > hits90m.tsv
 
