@@ -63,7 +63,7 @@ jobs:
         run: |
           sudo apt install mysql-client
 
-      - name: Run test
+      - name: Run ontime test
         run: |
           cat sql/ontime.sql | mysql -h127.0.0.1 -uroot -P3307
           echo "COPY INTO ontime FROM 's3://testbucket/ontime_2006_100000.csv' credentials=(aws_key_id='minioadmin' aws_secret_key='minioadmin') FILE_FORMAT = ( type = 'CSV' field_delimiter = ',' record_delimiter = '\n' skip_header = 1 );" | mysql -h127.0.0.1 -uroot -P3307

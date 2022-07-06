@@ -30,8 +30,8 @@ jobs:
 
       - name: Install and run databend by binary
         run: |
-          curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ steps.databend_version.outputs.VERSION }}/databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-musl.tar.gz
-          tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-musl.tar.gz
+          curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ steps.databend_version.outputs.VERSION }}/databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
+          tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
           ./scripts/start.sh
 
       # docker runtime
