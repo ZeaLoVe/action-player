@@ -21,6 +21,15 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
 
+      - name: Copy a file from s3
+        uses: prewk/s3-cp-action@v2
+        with:
+          aws_access_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # source: 's3://databend-benchmark-test/ontime_2006_100000.csv'
+          source: 's3://databendcloud/tutorial/ontime_2006_100000.csv'
+          dest: './ontime_2006_100000.csv'
+
       - name: Minio Setup for (ubuntu-latest only)
         shell: bash
         run: |
@@ -35,8 +44,8 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=minioadmin
           export AWS_EC2_METADATA_DISABLED=true
           aws --endpoint-url http://127.0.0.1:9900/ s3 mb s3://testbucket
-          aws --endpoint-url http://127.0.0.1:9900/ cp s3://databendcloud/tutorial/ontime_2006_100000.csv s3://testbucket/admin/data  --recursive
-          aws --endpoint-url http://127.0.0.1:9900/ ls s3://testbucket/admin/data
+          aws --endpoint-url http://127.0.0.1:9900/ s3 cp ontime_2006_100000.csv s3://testbucket/ontime_2006_100000.csv
+          aws --endpoint-url http://127.0.0.1:9900/ s3 ls s3://testbucket
 
       - name: Install and run databend by binary
         run: |
@@ -49,3 +58,11 @@ jobs:
           curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ github.event.inputs.image_tags }}/databend-${{ github.event.inputs.image_tags }}-x86_64-unknown-linux-musl.tar.gz
           tar zxvf databend-${{ github.event.inputs.image_tags }}-x86_64-unknown-linux-musl.tar.gz
           ./scripts/start.sh
+
+      - name: Install mysql client
+        run: |
+          sudo apt install mysql-client
+
+      - name: Run test
+        run: |
+          echo 'show tables;' | mysql -h127.0.0.1 -uroot -P3307
