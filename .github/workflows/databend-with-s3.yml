@@ -15,8 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: setup awscli
-        uses: hsupu@setup-awscli@v1
+      - uses: hsupu@setup-awscli@v1
         with:
           # these are default values
           install-dir: /usr/local/aws-cli
