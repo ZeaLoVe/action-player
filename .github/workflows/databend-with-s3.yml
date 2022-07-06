@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: setup awscli
+        uses: hsupu@setup-awscli@v1
+        
       - name: Minio Setup for (ubuntu-latest only)
         shell: bash
         run: |
@@ -31,7 +34,7 @@ jobs:
         run: |
           aws --endpoint-url http://127.0.0.1:9900/ s3 mb s3://testbucket
           aws --endpoint-url http://127.0.0.1:9900/ cp s3://databendcloud/tutorial/ontime_2006_100000.csv s3://testbucket/admin/data  --recursive
-          aws --endpoint-url  http://127.0.0.1:9900/ ls s3://testbucket/admin/data
+          aws --endpoint-url http://127.0.0.1:9900/ ls s3://testbucket/admin/data
 
       - name: Install and run databend by binary
         run: |
