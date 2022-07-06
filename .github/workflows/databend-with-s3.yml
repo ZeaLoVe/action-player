@@ -14,10 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - uses: hsupu@setup-awscli@v1
         with:
-          # these are default values
           install-dir: /usr/local/aws-cli
           bin-dir: /usr/local/bin
 
@@ -29,12 +27,11 @@ jobs:
                 -e "MINIO_SECRET_KEY=minioadmin" \
                 minio/minio server /data
 
+      - name: Copy test data
+        run: |
           export AWS_ACCESS_KEY_ID=minioadmin
           export AWS_SECRET_ACCESS_KEY=minioadmin
           export AWS_EC2_METADATA_DISABLED=true
-
-      - name: Copy test data
-        run: |
           aws --endpoint-url http://127.0.0.1:9900/ s3 mb s3://testbucket
           aws --endpoint-url http://127.0.0.1:9900/ cp s3://databendcloud/tutorial/ontime_2006_100000.csv s3://testbucket/admin/data  --recursive
           aws --endpoint-url http://127.0.0.1:9900/ ls s3://testbucket/admin/data
