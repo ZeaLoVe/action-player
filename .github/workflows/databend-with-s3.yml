@@ -68,13 +68,13 @@ jobs:
           cat sql/ontime.sql | mysql -h127.0.0.1 -uroot -P3307
           echo "COPY INTO ontime FROM 's3://testbucket/ontime_2006_100000.csv' credentials=(aws_key_id='minioadmin' aws_secret_key='minioadmin') FILE_FORMAT = ( type = 'CSV' field_delimiter = ',' record_delimiter = '\n' skip_header = 1 );" | mysql -h127.0.0.1 -uroot -P3307
           echo 'select count(*) from ontime;' | mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT DayOfWeek, count(*) AS c FROM ontime_2006 WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY DayOfWeek ORDER BY c DESC;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT DayOfWeek, count(*) AS c FROM ontime_2006 WHERE (DepDelay > 10) AND (Year >= 2000) AND (Year <= 2008) GROUP BY DayOfWeek ORDER BY c DESC;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT Origin, count(*) AS c FROM ontime_2006 WHERE (DepDelay > 10) AND (Year >= 2000) AND (Year <= 2008) GROUP BY Origin ORDER BY c DESC LIMIT 10;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, count() FROM ontime_2006 WHERE (DepDelay > 10) AND (Year = 2007) GROUP BY Carrier ORDER BY count() DESC;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(CAST(DepDelay > 10, Int8)) * 1000 AS c3 FROM ontime_2006 WHERE Year = 2007 GROUP BY Carrier ORDER BY c3 DESC;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(CAST(DepDelay > 10, Int8)) * 1000 AS c3 FROM ontime_2006 WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY Carrier ORDER BY c3 DESC;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay) * 1000 AS c3 FROM ontime_2006 WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY Carrier;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT Year, avg(DepDelay) FROM ontime_2006 GROUP BY Year;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT avg(c1) FROM ( SELECT Year, Month, count(*) AS c1 FROM ontime_2006 GROUP BY Year, Month ) AS a;' |mysql -h127.0.0.1 -uroot -P3307
-          echo 'SELECT OriginCityName, DestCityName, count(*) AS c FROM ontime_2006 GROUP BY OriginCityName, DestCityName ORDER BY c DESC LIMIT 10;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT DayOfWeek, count(*) AS c FROM ontime WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY DayOfWeek ORDER BY c DESC;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT DayOfWeek, count(*) AS c FROM ontime WHERE (DepDelay > 10) AND (Year >= 2000) AND (Year <= 2008) GROUP BY DayOfWeek ORDER BY c DESC;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT Origin, count(*) AS c FROM ontime WHERE (DepDelay > 10) AND (Year >= 2000) AND (Year <= 2008) GROUP BY Origin ORDER BY c DESC LIMIT 10;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, count() FROM ontime WHERE (DepDelay > 10) AND (Year = 2007) GROUP BY Carrier ORDER BY count() DESC;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(CAST(DepDelay > 10, Int8)) * 1000 AS c3 FROM ontime WHERE Year = 2007 GROUP BY Carrier ORDER BY c3 DESC;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(CAST(DepDelay > 10, Int8)) * 1000 AS c3 FROM ontime WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY Carrier ORDER BY c3 DESC;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay) * 1000 AS c3 FROM ontime WHERE (Year >= 2000) AND (Year <= 2008) GROUP BY Carrier;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT Year, avg(DepDelay) FROM ontime GROUP BY Year;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT avg(c1) FROM ( SELECT Year, Month, count(*) AS c1 FROM ontime GROUP BY Year, Month ) AS a;' |mysql -h127.0.0.1 -uroot -P3307
+          echo 'SELECT OriginCityName, DestCityName, count(*) AS c FROM ontime GROUP BY OriginCityName, DestCityName ORDER BY c DESC LIMIT 10;' |mysql -h127.0.0.1 -uroot -P3307
