@@ -1,0 +1,46 @@
+name: databend logic test install by binary
+
+on: 
+  workflow_dispatch:
+    inputs:
+      image_tags:
+        description: "tags of databend image"
+        required: false
+        default: v0.7.115-nightly
+
+jobs:
+  run-logic-test:
+    name: Run logic test 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Minio Setup for (ubuntu-latest only)
+        shell: bash
+        run: |
+          docker run -d -p 9900:9000 --name minio \
+                -e "MINIO_ACCESS_KEY=minioadmin" \
+                -e "MINIO_SECRET_KEY=minioadmin" \
+                minio/minio server /data
+
+          export AWS_ACCESS_KEY_ID=minioadmin
+          export AWS_SECRET_ACCESS_KEY=minioadmin
+          export AWS_EC2_METADATA_DISABLED=true
+
+      - name: Copy databend
+        run: |
+          aws --endpoint-url http://127.0.0.1:9900/ s3 mb s3://testbucket
+          aws --endpoint-url http://127.0.0.1:9900/ cp s3://databendcloud/tutorial/ontime_2006_100000.csv s3://testbucket/admin/data  --recursive
+          aws --endpoint-url  http://127.0.0.1:9900/ ls s3://testbucket/admin/data
+
+      - name: Install and run databend by binary
+        run: |
+          export STORAGE_TYPE=s3
+          export STORAGE_S3_BUCKET=testbucket
+          export STORAGE_S3_ROOT=admin
+          export STORAGE_S3_ENDPOINT_URL=http://127.0.0.1:9900
+          export STORAGE_S3_ACCESS_KEY_ID=minioadmin
+          export STORAGE_S3_SECRET_ACCESS_KEY=minioadmin
+          curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ github.event.inputs.image_tags }}/databend-${{ github.event.inputs.image_tags }}-x86_64-unknown-linux-musl.tar.gz
+          tar zxvf databend-${{ github.event.inputs.image_tags }}-x86_64-unknown-linux-musl.tar.gz
+          ./scripts/start.sh
