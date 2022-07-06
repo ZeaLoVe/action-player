@@ -1,4 +1,4 @@
-name: databend logic test install by binary
+name: databend with s3(minio)
 
 on: 
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-logic-test:
-    name: Run logic test 
+    name: Run databen with s3
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=minioadmin
           export AWS_EC2_METADATA_DISABLED=true
 
-      - name: Copy databend
+      - name: Copy test data
         run: |
           aws --endpoint-url http://127.0.0.1:9900/ s3 mb s3://testbucket
           aws --endpoint-url http://127.0.0.1:9900/ cp s3://databendcloud/tutorial/ontime_2006_100000.csv s3://testbucket/admin/data  --recursive
