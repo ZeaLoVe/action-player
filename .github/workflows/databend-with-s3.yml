@@ -17,7 +17,11 @@ jobs:
 
       - name: setup awscli
         uses: hsupu@setup-awscli@v1
-        
+        with:
+          # these are default values
+          install-dir: /usr/local/aws-cli
+          bin-dir: /usr/local/bin
+
       - name: Minio Setup for (ubuntu-latest only)
         shell: bash
         run: |
