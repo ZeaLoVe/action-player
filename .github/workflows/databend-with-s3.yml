@@ -65,4 +65,6 @@ jobs:
 
       - name: Run test
         run: |
-          echo 'show tables;' | mysql -h127.0.0.1 -uroot -P3307
+          cat sql/ontime.sql | mysql -h127.0.0.1 -uroot -P3307
+          echo "COPY INTO ontime FROM 's3://testbucket/ontime_2006_100000.csv' FILE_FORMAT = ( type = 'CSV' field_delimiter = ',' record_delimiter = '\n' skip_header = 1 );"" | mysql -h127.0.0.1 -uroot -P3307
+          echo 'select count(*) from ontime;' | mysql -h127.0.0.1 -uroot -P3307
