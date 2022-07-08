@@ -22,6 +22,8 @@ teleport_token=${TELEPORT_TOKEN-""}
 ec2_owner=${EC2_OWNER-""}
 ec2_users=${EC2_USERS-""}
 
+/bin/createuser.sh $ec2_owner
+
 teleport_installed_version=$(tctl version | awk '{print $2}')
 
 if [ "$(tctl version | awk '{print $2}')" != "$teleport_version" ]; then
