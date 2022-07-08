@@ -14,7 +14,7 @@ usermod -g root \$1
 sed -i "/^root.*/a\\\\\$1  ALL=(ALL)       ALL" /etc/sudoers
 EOF
 
-chmod 0755 /bin/createuser.sh
+chmod 0755 /usr/local/bin/createuser.sh
 
 teleport_version="v9.1.2"
 teleport_domain=${TELEPORT_DOMAIN-""}
@@ -22,7 +22,7 @@ teleport_token=${TELEPORT_TOKEN-""}
 ec2_owner=${EC2_OWNER-""}
 ec2_users=${EC2_USERS-""}
 
-/bin/createuser.sh $ec2_owner
+sudo /usr/local/bin/createuser.sh $ec2_owner
 
 teleport_installed_version=$(tctl version | awk '{print $2}')
 
