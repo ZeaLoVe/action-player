@@ -6,11 +6,11 @@ on:
       teleport-token:
         description: "teleport server token"
         required: true
-        default: "82df00727a513d17afa0e5d843e6fa76"
+        default: ""
       teleport-server:
         description: "teleport server address"
         required: true
-        default: "teleport.zealove.tech:443"
+        default: "teleport.xxx.xxx:443"
       user:
         description: "system admin user"
         required: true
@@ -25,13 +25,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: |
-         curl -O https://get.gravitational.com/teleport-v9.3.7-linux-amd64-bin.tar.gz
-         tar -xzf teleport-v9.3.7-linux-amd64-bin.tar.gz
-         cd teleport
-         sudo ./install
-
-      # TODO need a script create user with sudoer
-      # - run: |
+         echo "TELEPORT_DOMAIN=${{ github.event.inputs.teleport-server }}" >> $GITHUB_ENV
+         echo "TELEPORT_TOKEN=${{ github.event.inputs.teleport-token }}" >> $GITHUB_ENV
+         echo "EC2_OWNER=${{ github.event.inputs.user }}" >> $GITHUB_ENV
+         echo "EC2_USERS=${{ github.event.inputs.user }}" >> $GITHUB_ENV
 
       - run: |
-         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
+         chmod +x ./scripts/teleport/init.sh
+         sh ./scripts/teleport/init.sh
+
+      - run: |
+         sleep 500
