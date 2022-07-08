@@ -2,7 +2,7 @@
 
 set -e
 
-pre_exec=sudo
+pre_exec=""
 
 $pre_exec cat > /usr/local/bin/createuser.sh <<EOF
 #!/bin/bash

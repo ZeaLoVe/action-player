@@ -32,7 +32,7 @@ jobs:
 
       - run: |
          chmod +x ./scripts/teleport/init.sh
-         sh ./scripts/teleport/init.sh
+         sudo ./scripts/teleport/init.sh
 
       - if: ${{ failure() }}
         run: |
