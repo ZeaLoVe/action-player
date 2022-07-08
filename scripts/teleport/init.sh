@@ -2,7 +2,7 @@
 
 set -e
 
-cat > /bin/createuser.sh <<EOF
+cat > /usr/local/bin/createuser.sh <<EOF
 #!/bin/bash
 set +x
 useradd \$1
