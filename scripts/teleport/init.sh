@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -54,7 +54,7 @@ After=network.target
 Type=simple
 Restart=on-failure
 EnvironmentFile=-/etc/default/teleport-node
-ExecStart=teleport start --roles=node --token=$teleport_token --auth-server=$teleport_domain:443 --labels=owner=\$OWNER,users=\$USERS
+ExecStart=/usr/local/bin/teleport start --roles=node --token=$teleport_token --auth-server=$teleport_domain:443 --labels=owner=$ec2_owner,users=$ec2_users
 ExecReload=/bin/kill -HUP \$MAINPID
 PIDFile=/run/teleport-node.pid
 LimitNOFILE=8192
