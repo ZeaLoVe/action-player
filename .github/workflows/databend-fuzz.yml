@@ -39,6 +39,9 @@ jobs:
       - name: Install fuzz dependences
         shell: bash
         run: |
+          pip3 install --user boto3 "moto[all]" yapf shfmt-py toml yamllint
+          pip3 install --user mysql-connector-python pymysql sqlalchemy clickhouse_driver
+          pip3 install --user mysql-connector six PyHamcrest requests environs fire
           pip3 install --user fuzzingbook mysql-connector
 
       - name: run fuzz
