@@ -1,0 +1,47 @@
+name: databend fuzz test 
+
+on: 
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      image_tags:
+        description: "tags of databend image"
+        required: false
+        default: v0.7.80-nightly
+
+jobs:
+  run-logic-test:
+    name: Run fuzz test 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # usage: steps.databend_version.ouputs.VERSION
+      - name: Get Databend version
+        id: databend_version
+        run: |
+          LASTEST_TAG=$(curl -s GET https://api.github.com/repos/datafuselabs/databend/tags\?per_page\=1 | jq -r '.[].name')
+          echo ::set-output name=VERSION::${LASTEST_TAG}
+
+      - name: Show databend release version
+        run: |
+          echo "${{ steps.databend_version.outputs.VERSION }}"
+
+      - name: Install and run databend by binary
+        run: |
+          curl -LJO https://github.com/datafuselabs/databend/releases/download/${{ steps.databend_version.outputs.VERSION }}/databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
+          tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
+          ./scripts/start.sh
+
+      - uses: ./.github/actions/setup_python
+
+      - name: Install fuzz dependences
+        shell: bash
+        run: |
+          pip3 install --user fuzzingbook mysql-connector
+
+      - name: run fuzz
+        run: |
+          python3 scripts/fuzz.py
+          
