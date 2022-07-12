@@ -43,5 +43,5 @@ jobs:
 
       - name: run fuzz
         run: |
-          python3 scripts/fuzz.py
+          python3 python/fuzz.py
           
