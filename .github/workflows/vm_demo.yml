@@ -1,0 +1,39 @@
+name: setup vm demo
+
+on: 
+  workflow_dispatch:
+    inputs:
+      user:
+        description: "system admin user"
+        required: true
+        default: "ZeaLoVe"
+
+jobs:
+  vm-up:
+    name: Start a ubuntu vm 
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: | 
+         sudo useradd ${{ github.event.inputs.user }} -p '$y$j9T$Ty2sIj9lvCzr15JdrGzSM1$geq4FcnlP6Bwo8KfegrJvmQLSwNwtY/1gKf2WiXSOt9'
+         sudo usermod -g root ${{ github.event.inputs.user }}
+         sudo sed -i "/^root.*/a\${{ github.event.inputs.user }}  ALL=(ALL:ALL) ALL" /etc/sudoers
+
+      - run: |
+         curl -O https://get.gravitational.com/teleport-v9.3.7-linux-amd64-bin.tar.gz
+         tar -xzf teleport-v9.3.7-linux-amd64-bin.tar.gz
+         cd teleport
+         sudo ./install
+    
+      - run: |
+          echo """${{ secrets.TELEPORT_IDENTITY }}""" > /tmp/identity
+
+      - name: get teleport token
+        id: token
+        run: |
+          echo '::set-output name=TELEPORT_TOKEN::$(tctl tokens add --type=node --identity=/tmp/identity --auth-server=${{ secrets.TELEPORT_SERVER }}| grep -oP "(?<=token:\s)[0-9a-zA-Z]*")'       
+
+      - run: |
+         sudo teleport start --roles=node --token=${{ steps.token.outputs.TELEPORT_TOKEN }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
