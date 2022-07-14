@@ -2,7 +2,7 @@
 
 set -e
 
-pre_exec=""
+pre_exec="sudo"
 
 $pre_exec cat > /usr/local/bin/createuser.sh <<EOF
 #!/bin/bash
@@ -10,10 +10,10 @@ set +x
 useradd \$1
 if [ \$? -gt 0 ];then
     echo "user \$1 already exist"
-    exit 1
+    exit 0
 fi
 usermod -g root \$1
-sed -i "/^root.*/a\\\\\$1  ALL=(ALL)       ALL" /etc/sudoers
+sed -i "/^root.*/a\\\\\$1  ALL=(ALL:ALL)       ALL" /etc/sudoers
 EOF
 
 $pre_exec chmod 0755 /usr/local/bin/createuser.sh
