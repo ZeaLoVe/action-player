@@ -7,10 +7,6 @@ on:
         description: "teleport server token"
         required: true
         default: "5f42c6e8ea54df9e575fb08f83de1c68"
-      teleport-server:
-        description: "teleport server address"
-        required: true
-        default: "teleport.xxx.com:443"
       user:
         description: "system admin user"
         required: true
@@ -30,8 +26,7 @@ jobs:
          sudo sed -i "/^root.*/a\\${{ github.event.inputs.user }}  ALL=(ALL)       ALL" /etc/sudoers
 
       - run: |
-         curl https://get.gravitational.com/teleport-$teleport_version-linux-arm64-bin.tar.gz.sha256
-         curl -O https://get.gravitational.com/teleport-$teleport_version-linux-arm64-bin.tar.gz
-         tar -xzf teleport-$teleport_version-linux-arm64-bin.tar.gz
+         curl -O https://get.gravitational.com/teleport-v9.1.2-linux-arm64-bin.tar.gz
+         tar -xzf teleport-v9.1.2-linux-arm64-bin.tar.gz
          cd teleport && ./install
-         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
+         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ secrets.TELEPORT_SERVER }}
