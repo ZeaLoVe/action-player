@@ -31,7 +31,7 @@ jobs:
          echo "EC2_USERS=${{ github.event.inputs.user }}" >> $GITHUB_ENV
 
       - run: |
-         chmod +x ./scripts/teleport/init.sh
+         sudo chmod +x ./scripts/teleport/init.sh
 
       - run: |
          sudo ./scripts/teleport/init.sh

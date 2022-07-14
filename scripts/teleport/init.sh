@@ -63,6 +63,6 @@ LimitNOFILE=8192
 WantedBy=multi-user.target
 EOF
 
-$pre_exec systemctl daemon-reload
-$pre_exec systemctl enable teleport-node
-$pre_exec systemctl restart teleport-node
+# $pre_exec systemctl daemon-reload
+# $pre_exec systemctl enable teleport-node
+# $pre_exec systemctl restart teleport-node
