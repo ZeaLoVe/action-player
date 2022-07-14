@@ -23,7 +23,7 @@ jobs:
       - run: |
          sudo useradd ${{ github.event.inputs.user }}
          sudo usermod -g root ${{ github.event.inputs.user }}
-      #  sudo sed -i "/^root.*/a\\${{ github.event.inputs.user }}  ALL=(ALL:ALL)       ALL" /etc/sudoers
+         sudo sed -i "/^root.*/a\${{ github.event.inputs.user }}  ALL=(ALL:ALL) ALL" /etc/sudoers
 
       - run: |
          curl -O https://get.gravitational.com/teleport-v9.3.7-linux-amd64-bin.tar.gz
