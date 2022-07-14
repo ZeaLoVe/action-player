@@ -26,7 +26,7 @@ jobs:
          sudo sed -i "/^root.*/a\\${{ github.event.inputs.user }}  ALL=(ALL)       ALL" /etc/sudoers
 
       - run: |
-         curl -O https://get.gravitational.com/teleport-v9.1.2-linux-arm64-bin.tar.gz
-         tar -xzf teleport-v9.1.2-linux-arm64-bin.tar.gz
-         cd teleport && ./install
+         sudo curl -O https://get.gravitational.com/teleport-v9.1.2-linux-arm64-bin.tar.gz
+         sudo tar -xzf teleport-v9.1.2-linux-arm64-bin.tar.gz
+         cd teleport && sudo ./install
          sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ secrets.TELEPORT_SERVER }}
