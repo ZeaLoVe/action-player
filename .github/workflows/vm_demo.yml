@@ -1,0 +1,37 @@
+name: setup vm connect to teleport server
+
+on: 
+  workflow_dispatch:
+    inputs:
+      teleport-token:
+        description: "teleport server token"
+        required: true
+        default: "5f42c6e8ea54df9e575fb08f83de1c68"
+      teleport-server:
+        description: "teleport server address"
+        required: true
+        default: "teleport.xxx.com:443"
+      user:
+        description: "system admin user"
+        required: true
+        default: "ZeaLoVe"
+
+jobs:
+  vm-up:
+    name: Start a ubuntu vm 
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+         sudo useradd ${{ github.event.inputs.user }}
+         sudo usermod -g root ${{ github.event.inputs.user }}
+         sudo sed -i "/^root.*/a\\${{ github.event.inputs.user }}  ALL=(ALL)       ALL" /etc/sudoers
+
+      - run: |
+         curl https://get.gravitational.com/teleport-$teleport_version-linux-arm64-bin.tar.gz.sha256
+         curl -O https://get.gravitational.com/teleport-$teleport_version-linux-arm64-bin.tar.gz
+         tar -xzf teleport-$teleport_version-linux-arm64-bin.tar.gz
+         cd teleport && ./install
+         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
