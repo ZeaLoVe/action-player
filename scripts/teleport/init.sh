@@ -7,7 +7,7 @@ pre_exec="sudo"
 $pre_exec cat > /usr/local/bin/createuser.sh <<EOF
 #!/bin/bash
 set +x
-useradd \$1
+useradd -N \$1
 if [ \$? -gt 0 ];then
     echo "user \$1 already exist"
     exit 0

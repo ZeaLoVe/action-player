@@ -36,9 +36,8 @@ jobs:
       - run: |
          sudo ./scripts/teleport/init.sh
 
-      - if: ${{ failure() }}
-        run: |
+      - run: |
          sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ github.event.inputs.teleport-server }}
 
-      - run: |
-         sleep 500
+      # - run: |
+      #    sleep 500
