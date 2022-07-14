@@ -1,4 +1,4 @@
-name: setup vm connect to teleport server
+name: setup vm demo
 
 on: 
   workflow_dispatch:
