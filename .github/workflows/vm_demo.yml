@@ -32,4 +32,4 @@ jobs:
          sudo ./install
 
       - run: |
-         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ secrets.TELEPORT_SERVER }}
+         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
