@@ -34,10 +34,13 @@ jobs:
           tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
           ./scripts/start.sh
 
-      - name: Test setup
+      - name: Setup python 3.10
+        uses: actions/setup-python
+
+      - name: Install dependency
         shell: bash
         run: |
-          bash ./scripts/dev_setup.sh -yd
+          pip3 install fuzzingbook mysql-connector
 
       - name: run fuzz
         run: |

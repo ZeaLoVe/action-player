@@ -1,8 +1,8 @@
 name: databend logic test install by helm run on k3d
 
 on: 
-  schedule:
-    - cron: '0 23 * * *'
+  # schedule:
+  #   - cron: '0 23 * * *'
   workflow_dispatch:
     inputs:
       image_tags:
