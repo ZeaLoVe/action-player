@@ -33,7 +33,7 @@ jobs:
       - name: get teleport token
         id: token
         run: |
-          echo '::set-output name=TELEPORT_TOKEN::$(tctl tokens add --type=node --identity=/tmp/identity --auth-server=${{ secrets.TELEPORT_SERVER }}| grep -oP '(?<=token:\s)[0-9a-zA-Z]*')'       
+          echo '::set-output name=TELEPORT_TOKEN::$(tctl tokens add --type=node --identity=/tmp/identity --auth-server=${{ secrets.TELEPORT_SERVER }}| grep -oP "(?<=token:\s)[0-9a-zA-Z]*")'       
 
       - run: |
          sudo teleport start --roles=node --token=${{ steps.token.outputs.TELEPORT_TOKEN }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
