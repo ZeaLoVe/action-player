@@ -33,7 +33,7 @@ jobs:
       - name: get teleport token
         id: token
         run: |
-          export teleport_token=`tctl tokens add --type=node --identity=/tmp/identity | grep -oP '(?<=token:\s)[0-9a-zA-Z]*'`
+          export teleport_token=`tctl tokens add --type=node --identity=/tmp/identity --auth-server=${{ secrets.TELEPORT_SERVER }}| grep -oP '(?<=token:\s)[0-9a-zA-Z]*'`
           echo '::set-output name=TELEPORT_TOKEN::$teleport_token'       
 
       - run: |
