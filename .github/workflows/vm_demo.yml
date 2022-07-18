@@ -3,10 +3,6 @@ name: setup vm demo
 on: 
   workflow_dispatch:
     inputs:
-      teleport-token:
-        description: "teleport server token"
-        required: true
-        default: "${{ secrets.TELEPORT_TOKEN }}"
       user:
         description: "system admin user"
         required: true
@@ -32,4 +28,4 @@ jobs:
          sudo ./install
 
       - run: |
-         sudo teleport start --roles=node --token=${{ github.event.inputs.teleport-token }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
+         sudo teleport start --roles=node --token=${{ secrets.TELEPORT_TOKEN }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
