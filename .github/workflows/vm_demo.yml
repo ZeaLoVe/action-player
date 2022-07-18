@@ -26,6 +26,15 @@ jobs:
          tar -xzf teleport-v9.3.7-linux-amd64-bin.tar.gz
          cd teleport
          sudo ./install
+    
+      - run: |
+          echo -n ${{ secrets.TELEPORT_IDENTITY }} > /tmp/identity
+
+      - name: get teleport token
+        id: token
+        run: |
+          export teleport_token=`tctl tokens add --type=node --identity=/tmp/identity | grep -oP '(?<=token:\s)[0-9a-zA-Z]*'`
+          echo '::set-output name=TELEPORT_TOKEN::$teleport_token'       
 
       - run: |
-         sudo teleport start --roles=node --token=${{ secrets.TELEPORT_TOKEN }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
+         sudo teleport start --roles=node --token=${{ steps.token.outputs.TELEPORT_TOKEN }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ github.event.inputs.user }}
