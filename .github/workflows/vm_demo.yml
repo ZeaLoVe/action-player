@@ -6,7 +6,7 @@ on:
       teleport-token:
         description: "teleport server token"
         required: true
-        default: "5f42c6e8ea54df9e575fb08f83de1c68"
+        default: ${{ secrets.TELEPORT_TOKEN }}
       user:
         description: "system admin user"
         required: true
