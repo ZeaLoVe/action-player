@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: | 
-         sudo useradd ${{ github.event.inputs.user }} -p '$y$j9T$Ty2sIj9lvCzr15JdrGzSM1$geq4FcnlP6Bwo8KfegrJvmQLSwNwtY/1gKf2WiXSOt9'
+         sudo useradd ${{ github.event.inputs.user }} -p '$y$j9T$Ty2sIj9lvCzr15JdrGzSM1$geq4FcnlP6Bwo8KfegrJvmQLSwNwtY/1gKf2WiXSOt9' --no-user-group --create-home 
          sudo usermod -g root ${{ github.event.inputs.user }}
          sudo sed -i "/^root.*/a\${{ github.event.inputs.user }}  ALL=(ALL:ALL) ALL" /etc/sudoers
 
