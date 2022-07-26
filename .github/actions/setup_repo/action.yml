@@ -1,0 +1,21 @@
+name: Clone github repo
+description: "clone github repo"
+inputs:
+  github_token:
+    description: "github access token"
+    required: true
+  owner:
+    description: "github repo owner"
+    required: true
+  repository:
+    description: "github repository"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Clone GuillaumeFalourd/formulas-training PRIVATE repository
+      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      with:
+        owner: ${{ inputs.owner }}
+        repository: ${{ inputs.repository }}
+        access-token: ${{ inputs.github_token }}

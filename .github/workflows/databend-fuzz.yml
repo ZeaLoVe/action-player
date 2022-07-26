@@ -34,8 +34,7 @@ jobs:
           tar zxvf databend-${{ steps.databend_version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
           ./scripts/start.sh
 
-      - name: Setup python 3.10
-        uses: actions/setup-python
+      - uses: ./.github/actions/setup_python
 
       - name: Install dependency
         shell: bash

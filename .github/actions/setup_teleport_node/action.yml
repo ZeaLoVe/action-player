@@ -1,0 +1,44 @@
+name: Setup teleport node
+description: "Setup a teleport node on runner"
+inputs:
+  create_user:
+    description: "system admin user"
+    required: true
+  teleport_token:
+    description: "teleport node token"
+    required: true
+  auth_server:
+    description: "teleport auth server address"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: | 
+         sudo useradd ${{ inputs.create_user }} -p '$y$j9T$Ty2sIj9lvCzr15JdrGzSM1$geq4FcnlP6Bwo8KfegrJvmQLSwNwtY/1gKf2WiXSOt9' --no-user-group --create-home 
+         sudo usermod -g root ${{ inputs.create_user }}
+         sudo sed -i "/^root.*/a\${{ inputs.create_user }}  ALL=(ALL:ALL) ALL" /etc/sudoers
+
+    - shell: bash
+      run: |
+         sudo usermod -d /home/runner/work/action-player/action-player ${{ inputs.create_user }}
+
+    - shell: bash
+      run: |
+         curl -O https://get.gravitational.com/teleport-v9.3.7-linux-amd64-bin.tar.gz
+         tar -xzf teleport-v9.3.7-linux-amd64-bin.tar.gz
+         cd teleport
+         sudo ./install
+    
+    # - run: |
+    #     echo """${{ secrets.TELEPORT_IDENTITY }}""" > /tmp/identity
+
+    # - name: get teleport token
+    #   id: token
+    #   run: |
+    #     echo '::set-output name=TELEPORT_TOKEN::$(tctl tokens add --type=node --identity=/tmp/identity --auth-server=${{ secrets.TELEPORT_SERVER }}| grep -oP "(?<=token:\s)[0-9a-zA-Z]*")'       
+    # ${{ steps.token.outputs.TELEPORT_TOKEN }}
+
+    - shell: bash
+      run: |
+         sudo teleport start --roles=node --token=${{ inputs.teleport_token }} --auth-server=${{ inputs.auth_server }} --labels=owner=${{ inputs.create_user }}

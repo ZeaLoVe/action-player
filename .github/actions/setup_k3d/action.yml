@@ -12,10 +12,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
     - uses: stefanprodan/kube-tools@v1
       with:
         helm: ${{ inputs.helm_version }}
+
+    - uses: imranismail/setup-kustomize@v1
 
     - uses: rinx/setup-k3d@v0.0.2
       with:

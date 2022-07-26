@@ -1,0 +1,62 @@
+name: setup vm with databend
+
+on: 
+  workflow_dispatch:
+    inputs:
+      user:
+        description: "system admin user"
+        required: true
+        default: "ZeaLoVe"
+      token:
+        description: "teleport node token"
+        required: true
+      branch:
+        description: "repo branch"
+        default: "main"
+        required: true
+
+jobs:
+  vm-up:
+    name: Start a ubuntu vm with k3d cluster
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup_python
+
+      - name: Install python dependences
+        shell: bash
+        run: |
+          pip3 install --user mysql-connector-python mysql-connector six PyHamcrest requests environs
+
+      - uses: ./.github/actions/setup_repo
+        with:
+          owner: "ZeaLoVe"
+          repository: "databend"
+
+      - shell: bash
+        run: |
+          cd databend && git checkout ${{ github.event.inputs.branch }}
+
+      # usage: steps.databend_version.ouputs.VERSION
+      - name: Get Databend version
+        id: databend_version
+        run: |
+          LASTEST_TAG=$(curl -s GET https://api.github.com/repos/datafuselabs/databend/tags\?per_page\=1 | jq -r '.[].name')
+          echo ::set-output name=VERSION::${LASTEST_TAG}
+
+      - name: Show databend release version
+        run: |
+          echo "${{ steps.databend_version.outputs.VERSION }}"
+
+      - uses: ./.github/actions/setup_databend_binary
+        with:
+          tag: ${{ steps.databend_version.outputs.VERSION}}
+    
+      # working dir: /home/runner/work/action-player/action-player
+
+      - uses: ./.github/actions/setup_teleport_node
+        with:
+          create_user: ${{ github.event.inputs.user }}
+          teleport_token: ${{ github.event.inputs.token }}
+          auth_server: ${{ secrets.TELEPORT_SERVER }}
