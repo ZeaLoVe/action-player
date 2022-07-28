@@ -13,8 +13,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-
     - shell: bash
       run: | 
          sudo useradd ${{ inputs.create_user }} -p '$y$j9T$Ty2sIj9lvCzr15JdrGzSM1$geq4FcnlP6Bwo8KfegrJvmQLSwNwtY/1gKf2WiXSOt9' --no-user-group --create-home 

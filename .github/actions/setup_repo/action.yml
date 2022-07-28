@@ -13,8 +13,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-
     - name: Clone GuillaumeFalourd/formulas-training PRIVATE repository
       uses: GuillaumeFalourd/clone-github-repo-action@v2
       with:
