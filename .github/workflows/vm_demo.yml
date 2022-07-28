@@ -21,9 +21,11 @@ jobs:
 
       - uses: ./.github/actions/setup_repo
         with:
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }} 
           owner: "datafuselabs"
           repository: "databend"
+
+      - run: |
+         cd databend && pwd
 
       - uses: ./.github/actions/setup_repo
         with:
