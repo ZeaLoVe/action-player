@@ -18,6 +18,19 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup_repo
+        with:
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }} 
+          owner: "datafuselabs"
+          repository: "databend"
+
+      - uses: ./.github/actions/setup_repo
+        with:
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }} 
+          owner: ${{ secrets.PRIVATE_REPO_OWNER }}
+          repository: ${{ secrets.PRIVATE_REPOSITORY }}
+
       - uses: ./.github/actions/setup_teleport_node
         with:
           create_user: ${{ github.event.inputs.user }}
