@@ -7,6 +7,9 @@ inputs:
   teleport_token:
     description: "teleport node token"
     required: true
+  auth_server:
+    description: "teleport auth server address"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -36,4 +39,4 @@ runs:
 
     - shell: bash
       run: |
-         sudo teleport start --roles=node --token=${{ inputs.teleport_token }} --auth-server=${{ secrets.TELEPORT_SERVER }} --labels=owner=${{ inputs.create_user }}
+         sudo teleport start --roles=node --token=${{ inputs.teleport_token }} --auth-server=${{ inputs.auth_server }} --labels=owner=${{ inputs.create_user }}
