@@ -1,0 +1,36 @@
+name: setup vm with k3d cluster
+
+on: 
+  workflow_dispatch:
+    inputs:
+      user:
+        description: "system admin user"
+        required: true
+        default: "ZeaLoVe"
+      token:
+        description: "teleport node token"
+        required: true
+
+jobs:
+  vm-up:
+    name: Start a ubuntu vm 
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup_repo
+        with:
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }} 
+          owner: ${{ secrets.PRIVATE_REPO_OWNER }}
+          repository: ${{ secrets.PRIVATE_REPOSITORY }}
+
+      - uses: ./.github/actions/setup_go
+      - uses: ./.github/actions/setup_k3d      
+      # working dir: /home/runner/work/action-player/action-player
+
+      - uses: ./.github/actions/setup_teleport_node
+        with:
+          create_user: ${{ github.event.inputs.user }}
+          teleport_token: ${{ github.event.inputs.token }}
+          auth_server: ${{ secrets.TELEPORT_SERVER }}
