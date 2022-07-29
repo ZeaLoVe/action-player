@@ -51,7 +51,7 @@ jobs:
 
       - uses: ./.github/actions/setup_databend_binary
         with:
-          tag: ${{ steps.databend_version.ouputs.VERSION}}
+          tag: ${{ steps.databend_version.outputs.VERSION}}
     
       # working dir: /home/runner/work/action-player/action-player
 
