@@ -26,8 +26,17 @@ jobs:
           repository: ${{ secrets.PRIVATE_REPOSITORY }}
 
       - uses: ./.github/actions/setup_go
-      - uses: ./.github/actions/setup_k3d      
+
+      - run: |
+          go version
+          
+      - run: |
+          # install k3d
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.4.1 bash
+    
       # working dir: /home/runner/work/action-player/action-player
+      - run: |
+          ${{ secrets.PRIVATE_COMMANDS }}
 
       - uses: ./.github/actions/setup_teleport_node
         with:

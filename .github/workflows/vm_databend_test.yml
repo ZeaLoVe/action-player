@@ -10,7 +10,7 @@ on:
       token:
         description: "teleport node token"
         required: true
-      branches:
+      branch:
         description: "repo branch"
         default: "main"
         required: true
@@ -27,7 +27,7 @@ jobs:
       - name: Install python dependences
         shell: bash
         run: |
-          pip3 install --user mysql-connector-python
+          pip3 install --user mysql-connector-python mysql-connector six PyHamcrest requests environs
 
       - uses: ./.github/actions/setup_repo
         with:
