@@ -31,7 +31,7 @@ jobs:
 
       - uses: ./.github/actions/setup_repo
         with:
-          owner: "datafuselabs"
+          owner: "ZeaLoVe"
           repository: "databend"
 
       - shell: bash
