@@ -39,6 +39,7 @@ jobs:
           ${{ secrets.PRIVATE_COMMANDS }}
 
       - uses: ./.github/actions/setup_teleport_node
+        if: ${{ failure() }}
         with:
           create_user: ${{ github.event.inputs.user }}
           teleport_token: ${{ github.event.inputs.token }}
