@@ -29,6 +29,11 @@ jobs:
         shell: bash
         run: |
           pip3 install --user six PyHamcrest requests environs fire
+      
+      - name: Install greenlet
+        shell: bash
+        run: |
+          pip3 install greenlet 
 
       - name: Install test
         shell: bash
