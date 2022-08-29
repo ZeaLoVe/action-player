@@ -29,6 +29,11 @@ jobs:
         shell: bash
         run: |
           pip3 install --user six PyHamcrest requests environs fire
+
+      - name: Install test
+        shell: bash
+        run: |
+          pip3 install https://github.com/youngsofun/clickhouse-sqlalchemy/archive/a116e3162c699c12e63a689385b547f639c13018.zip
   
       - name: Python version
         shell: bash
